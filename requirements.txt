@@ -1,8 +1,18 @@
-fastapi
-uvicorn[standard]
-torch
-torchvision
-pillow
-python-multipart
-numpy
-pydantic-settings
+# Web Framework
+fastapi==0.128.0
+uvicorn==0.40.0
+python-multipart==0.0.21
+
+# PyTorch (CPU version)
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.5.1+cpu
+torchvision==0.20.1+cpu
+
+# Image Processing
+pillow==12.0.0
+
+# Configuration
+pydantic-settings==2.12.0
+
+# Core Dependencies (automatically installed with above)
+numpy==2.2.6

@@ -24,6 +24,7 @@ share/python-wheels/
 MANIFEST
 
 # Virtual Environment
+.venv/
 venv/
 env/
 ENV/
@@ -36,7 +37,6 @@ venv.bak/
 *.swp
 *.swo
 *~
-.DS_Store
 
 # Environment variables
 .env
@@ -51,20 +51,38 @@ logs/
 .pytest_cache/
 .coverage
 htmlcov/
+.tox/
+.nox/
 test_*.png
 test_*.jpg
 
-# Model files (uncomment if models are too large for git)
+# Model files (keep models in git for deployment)
+# Uncomment if models are too large for git
 # models/*.pth
+# models/*.pt
 
 # Deployment
 .render/
 render.yaml.backup
 
-# Uploaded files (if any)
+# Uploaded files
 uploads/
 temp/
+tmp/
 
 # OS
 Thumbs.db
 .DS_Store
+
+# Git
+.git/
+.gitattributes
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Cache
+.cache/
+*.pyc

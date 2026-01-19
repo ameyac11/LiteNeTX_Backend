@@ -28,7 +28,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://litenet.vercel.app"],
+    allow_origins=["https://litenet.vercel.app", "http://localhost:8080"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,12 +39,8 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_event():
     """Load models on startup."""
-    print("Loading models...")
     load_fashion_model()
-    print("✓ FashionMNIST model loaded")
     load_cifar_model()
-    print("✓ CIFAR-10 model loaded")
-    print("API ready!")
 
 
 @app.get("/api/examples/list/{model_type}")
