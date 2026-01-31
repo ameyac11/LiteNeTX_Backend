@@ -16,7 +16,7 @@ from app.ml.predictor import predict_fashion, predict_cifar
 
 
 # Application configuration
-APP_NAME = "LiteNet API"
+APP_NAME = "LiteNeTX API"
 APP_VERSION = "1.0"
 
 
@@ -28,7 +28,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://litenet.vercel.app"],
+    allow_origins=["https://litenetx.in", "https://www.litenetx.in", "https://litenetx.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -146,7 +146,7 @@ async def root() -> Dict:
     """Root endpoint."""
     return {
         "status": "ok",
-        "service": "LiteNet API",
+        "service": "LiteNeTX API",
         "version": "1.0"
     }
 

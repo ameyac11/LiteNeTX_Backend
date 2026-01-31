@@ -44,7 +44,7 @@ def predict_fashion(image: Image.Image) -> Dict:
     ]
     
     return {
-        "model": "LiteNet-Fashion",
+        "model": "LiteNeTX-Fashion",
         "top1": top3[0],
         "top3": top3
     }
@@ -83,7 +83,7 @@ def predict_cifar(image: Image.Image) -> Dict:
     ]
     
     return {
-        "model": "LiteNet-CIFAR",
+        "model": "LiteNeTX-CIFAR",
         "top1": top3[0],
         "top3": top3
     }
