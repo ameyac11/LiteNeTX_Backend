@@ -8,11 +8,14 @@ python-multipart==0.0.21
 torch==2.5.1+cpu
 torchvision==0.20.1+cpu
 
+# Model loading
+safetensors==0.7.0
+
 # Image Processing
 pillow==12.0.0
 
 # Configuration
 pydantic-settings==2.12.0
 
-# Core Dependencies (automatically installed with above)
+# Core
 numpy==2.2.6

@@ -1,4 +1,4 @@
-"""Image preprocessing utilities for both models."""
+"""Image preprocessing for all three models."""
 
 import torch
 from torchvision import transforms
@@ -6,48 +6,40 @@ from PIL import Image
 
 
 def preprocess_fashion(image: Image.Image) -> torch.Tensor:
-    """
-    Preprocess image for FashionMNIST model.
-    
-    Args:
-        image: PIL Image to preprocess
-        
-    Returns:
-        Preprocessed tensor of shape (1, 1, 28, 28)
-    """
+    """Preprocess for LiteNeTX-1 FashionMNIST (1x28x28 grayscale)."""
     transform = transforms.Compose([
-        transforms.Resize((28, 28)),
+        transforms.Resize(28),
+        transforms.CenterCrop(28),
         transforms.Grayscale(),
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.5], std=[0.5]),
     ])
-    
-    tensor = transform(image).unsqueeze(0)  # Add batch dimension
-    return tensor
+    return transform(image).unsqueeze(0)
 
 
-def preprocess_cifar(image: Image.Image) -> torch.Tensor:
-    """
-    Preprocess image for CIFAR-10 model.
-    
-    Args:
-        image: PIL Image to preprocess
-        
-    Returns:
-        Preprocessed tensor of shape (1, 3, 32, 32)
-    """
-    # Convert to RGB if needed
+def preprocess_cifar10(image: Image.Image) -> torch.Tensor:
+    """Preprocess for LiteNeTX-2 CIFAR-10 (3x32x32 RGB)."""
     if image.mode != 'RGB':
         image = image.convert('RGB')
-    
+
     transform = transforms.Compose([
-        transforms.Resize((32, 32)),
+        transforms.Resize(32),
+        transforms.CenterCrop(32),
         transforms.ToTensor(),
-        transforms.Normalize(
-            mean=[0.4914, 0.4822, 0.4465], 
-            std=[0.2470, 0.2435, 0.2616]
-        ),
+        transforms.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.2470, 0.2435, 0.2616]),
     ])
-    
-    tensor = transform(image).unsqueeze(0)  # Add batch dimension
-    return tensor
+    return transform(image).unsqueeze(0)
+
+
+def preprocess_cifar100(image: Image.Image) -> torch.Tensor:
+    """Preprocess for LiteNeTX-3 CIFAR-100 (3x32x32 RGB)."""
+    if image.mode != 'RGB':
+        image = image.convert('RGB')
+
+    transform = transforms.Compose([
+        transforms.Resize(32),
+        transforms.CenterCrop(32),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5071, 0.4867, 0.4408], std=[0.2675, 0.2565, 0.2761]),
+    ])
+    return transform(image).unsqueeze(0)

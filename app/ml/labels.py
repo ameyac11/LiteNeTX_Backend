@@ -1,29 +1,34 @@
-"""Label definitions for both models."""
+"""Class labels for all three LiteNeTX models."""
 
-# FashionMNIST class labels (fixed order)
 FASHION_LABELS = [
-    "T-shirt/top",
-    "Trouser",
-    "Pullover",
-    "Dress",
-    "Coat",
-    "Sandal",
-    "Shirt",
-    "Sneaker",
-    "Bag",
-    "Ankle boot"
+    "T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",
+    "Sandal", "Shirt", "Sneaker", "Bag", "Ankle boot"
 ]
 
-# CIFAR-10 class labels (fixed order)
-CIFAR_LABELS = [
-    "airplane",
-    "automobile",
-    "bird",
-    "cat",
-    "deer",
-    "dog",
-    "frog",
-    "horse",
-    "ship",
-    "truck"
+CIFAR10_LABELS = [
+    "airplane", "automobile", "bird", "cat", "deer",
+    "dog", "frog", "horse", "ship", "truck"
+]
+
+CIFAR100_LABELS = [
+    "apple", "aquarium_fish", "baby", "bear", "beaver",
+    "bed", "bee", "beetle", "bicycle", "bottle",
+    "bowl", "boy", "bridge", "bus", "butterfly",
+    "camel", "can", "castle", "caterpillar", "cattle",
+    "chair", "chimpanzee", "clock", "cloud", "cockroach",
+    "couch", "crab", "crocodile", "cup", "dinosaur",
+    "dolphin", "elephant", "flatfish", "forest", "fox",
+    "girl", "hamster", "house", "kangaroo", "keyboard",
+    "lamp", "lawn_mower", "leopard", "lion", "lizard",
+    "lobster", "man", "maple_tree", "motorcycle", "mountain",
+    "mouse", "mushroom", "oak_tree", "orange", "orchid",
+    "otter", "palm_tree", "pear", "pickup_truck", "pine_tree",
+    "plain", "plate", "poppy", "porcupine", "possum",
+    "rabbit", "raccoon", "ray", "road", "rocket",
+    "rose", "sea", "seal", "shark", "shrew",
+    "skunk", "skyscraper", "snail", "snake", "spider",
+    "squirrel", "streetcar", "sunflower", "sweet_pepper", "table",
+    "tank", "telephone", "television", "tiger", "tractor",
+    "train", "trout", "tulip", "turtle", "wardrobe",
+    "whale", "willow_tree", "wolf", "woman", "worm"
 ]
