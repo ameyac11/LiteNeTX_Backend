@@ -11,6 +11,9 @@ torchvision==0.20.1+cpu
 # Model loading
 safetensors==0.7.0
 
+# Dependencies
+packaging==24.0
+
 # Image Processing
 pillow==12.0.0
 
