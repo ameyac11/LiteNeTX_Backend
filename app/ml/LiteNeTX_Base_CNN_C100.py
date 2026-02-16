@@ -38,25 +38,21 @@ class SEBlock(nn.Module):
         return x * w
 
 
-class PreActBottleneckSE(nn.Module):
-    """Pre-activation bottleneck with SE attention and stochastic depth."""
-    expansion = 4
+class PreActBasicSE(nn.Module):
+    """Pre-activation basic residual block with SE attention and stochastic depth.
+    BN -> ReLU -> Conv3x3 -> BN -> ReLU -> Conv3x3 -> SE -> DropPath + Shortcut
 
-    def __init__(self, in_ch, mid_ch, stride=1, drop=0.0, drop_path_rate=0.0):
+    Wider basic blocks provide better feature learning than narrow bottleneck blocks
+    for CIFAR-scale tasks, while being faster on CPU (fewer sequential ops).
+    """
+    def __init__(self, in_ch, out_ch, stride=1, drop_path_rate=0.0, se_reduction=16):
         super().__init__()
-        out_ch = mid_ch * self.expansion
-
         self.bn1 = nn.BatchNorm2d(in_ch)
-        self.conv1 = nn.Conv2d(in_ch, mid_ch, 1, bias=False)
+        self.conv1 = nn.Conv2d(in_ch, out_ch, 3, stride=stride, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_ch)
+        self.conv2 = nn.Conv2d(out_ch, out_ch, 3, padding=1, bias=False)
 
-        self.bn2 = nn.BatchNorm2d(mid_ch)
-        self.conv2 = nn.Conv2d(mid_ch, mid_ch, 3, stride=stride, padding=1, bias=False)
-
-        self.bn3 = nn.BatchNorm2d(mid_ch)
-        self.drop = nn.Dropout2d(drop) if drop > 0 else nn.Identity()
-        self.conv3 = nn.Conv2d(mid_ch, out_ch, 1, bias=False)
-
-        self.se = SEBlock(out_ch)
+        self.se = SEBlock(out_ch, se_reduction)
         self.drop_path_rate = drop_path_rate
 
         self.shortcut = nn.Sequential()
@@ -68,60 +64,63 @@ class PreActBottleneckSE(nn.Module):
 
     def forward(self, x):
         out = F.relu(self.bn1(x), inplace=True)
+        shortcut = self.shortcut(x)
+
         out = self.conv1(out)
         out = F.relu(self.bn2(out), inplace=True)
         out = self.conv2(out)
-        out = F.relu(self.bn3(out), inplace=True)
-        out = self.drop(out)
-        out = self.conv3(out)
         out = self.se(out)
 
         if self.training and self.drop_path_rate > 0:
             out = _drop_path(out, self.drop_path_rate, True)
 
-        return out + self.shortcut(x)
+        return out + shortcut
 
 
 class LiteNeTX_Base_CNN_C100(nn.Module):
-    """Pre-Act Bottleneck SE-ResNet for CIFAR-100 — 14.6M params, 23 blocks."""
-
-    def __init__(self, num_classes=100, use_checkpoint=False):
+    """
+    LiteNeTX CIFAR-100: ~18.9M params, PreAct Wide SE-ResNet.
+    Wider-than-deep design with SE attention and stochastic depth.
+    Channels: 64 -> 128 -> 256 -> 512
+    Blocks: 4 + 4 + 3 = 11 basic blocks (23 conv layers total)
+    Optimized for efficient CPU inference and high accuracy.
+    """
+    def __init__(self, num_classes=100):
         super().__init__()
-        self.use_checkpoint = use_checkpoint
 
-        block_counts = [3, 12, 8]
-        max_drop_path = 0.2
+        block_counts = [4, 4, 3]
+        channels = [128, 256, 512]
+        max_drop_path = 0.15
         total_blocks = sum(block_counts)
         dpr = [x.item() for x in torch.linspace(0, max_drop_path, total_blocks)]
 
-        # Stem: 3 -> 64
+        # stem: 3 -> 64
         self.conv1 = nn.Conv2d(3, 64, 3, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
 
-        # Stages with bottleneck expansion=4
+        # stages: wide basic blocks with SE attention
         cur = 0
-        self.stage1 = self._make_stage(64, 64, block_counts[0], stride=1, drop=0.05,
-                                        dprs=dpr[cur:cur+block_counts[0]])
+        self.stage1 = self._make_stage(64, channels[0], block_counts[0], stride=1,
+                                        dprs=dpr[cur:cur+block_counts[0]])     # 32x32, 128ch
         cur += block_counts[0]
-        self.stage2 = self._make_stage(256, 128, block_counts[1], stride=2, drop=0.10,
-                                        dprs=dpr[cur:cur+block_counts[1]])
+        self.stage2 = self._make_stage(channels[0], channels[1], block_counts[1], stride=2,
+                                        dprs=dpr[cur:cur+block_counts[1]])     # 16x16, 256ch
         cur += block_counts[1]
-        self.stage3 = self._make_stage(512, 256, block_counts[2], stride=2, drop=0.15,
-                                        dprs=dpr[cur:cur+block_counts[2]])
+        self.stage3 = self._make_stage(channels[1], channels[2], block_counts[2], stride=2,
+                                        dprs=dpr[cur:cur+block_counts[2]])     # 8x8, 512ch
 
-        # Head
-        self.final_bn = nn.BatchNorm2d(1024)
+        # head
+        self.final_bn = nn.BatchNorm2d(channels[2])
         self.pool = nn.AdaptiveAvgPool2d(1)
-        self.dropout = nn.Dropout(0.3)
-        self.fc = nn.Linear(1024, num_classes)
+        self.dropout = nn.Dropout(0.25)
+        self.fc = nn.Linear(channels[2], num_classes)
 
         self._init_weights()
 
-    def _make_stage(self, in_ch, mid_ch, blocks, stride, drop, dprs):
-        out_ch = mid_ch * PreActBottleneckSE.expansion
-        layers = [PreActBottleneckSE(in_ch, mid_ch, stride, drop, dprs[0])]
+    def _make_stage(self, in_ch, out_ch, blocks, stride, dprs):
+        layers = [PreActBasicSE(in_ch, out_ch, stride, dprs[0])]
         for i in range(1, blocks):
-            layers.append(PreActBottleneckSE(out_ch, mid_ch, 1, drop, dprs[i]))
+            layers.append(PreActBasicSE(out_ch, out_ch, 1, dprs[i]))
         return nn.Sequential(*layers)
 
     def _init_weights(self):
@@ -137,10 +136,10 @@ class LiteNeTX_Base_CNN_C100(nn.Module):
                     nn.init.constant_(m.bias, 0)
 
     def forward(self, x):
-        x = F.relu(self.bn1(self.conv1(x)), inplace=True)
-        x = self.stage1(x)
-        x = self.stage2(x)
-        x = self.stage3(x)
+        x = F.relu(self.bn1(self.conv1(x)), inplace=True)  # 32x32, 64ch
+        x = self.stage1(x)   # 32x32, 128ch
+        x = self.stage2(x)   # 16x16, 256ch
+        x = self.stage3(x)   # 8x8, 512ch
 
         x = F.relu(self.final_bn(x), inplace=True)
         x = self.pool(x)
@@ -159,7 +158,7 @@ def load_cifar100_model():
         return _model
 
     device = torch.device("cpu")
-    model = LiteNeTX_Base_CNN_C100(num_classes=100, use_checkpoint=False)
+    model = LiteNeTX_Base_CNN_C100(num_classes=100)
 
     model_path = Path(__file__).parent.parent.parent / "models" / "LiteNeTX_Base_CNN_C100.safetensors"
     state_dict = load_file(str(model_path))
