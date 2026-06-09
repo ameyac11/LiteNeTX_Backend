@@ -1,4 +1,4 @@
-"""LiteNeTX API — serves FashionMNIST, CIFAR-10, and CIFAR-100 models."""
+"""LiteNeTX API — serves FashionMNIST, CIFAR-10, and CIFAR-100 models"""
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
