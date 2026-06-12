@@ -11,7 +11,7 @@
 
 <br />
 
-🎥 [Demo](https://youtu.be/wyhVdyEy1v0) · 📝 [Kaggle Writeup](https://www.kaggle.com/writeups/ameyac11/litenetx) · 🔗 [DOI](https://doi.org/10.34740/kaggle/w/86629)
+🌐 [Live Demo](https://litenetx.in) · 🎥 [Demo](https://youtu.be/wyhVdyEy1v0) · 📝 [Kaggle Writeup](https://www.kaggle.com/writeups/ameyac11/litenetx) · 🔗 [DOI](https://doi.org/10.34740/kaggle/w/86629)
 
 <br />
 
