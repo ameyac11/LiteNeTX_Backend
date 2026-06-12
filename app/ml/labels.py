@@ -1,4 +1,4 @@
-"""Class labels for all three LiteNeTX models."""
+"""LiteNeTX label lists."""
 
 FASHION_LABELS = [
     "T-shirt/top", "Trouser", "Pullover", "Dress", "Coat",

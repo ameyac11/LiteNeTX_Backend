@@ -1,4 +1,4 @@
-"""LiteNeTX-2 CIFAR-10 model definition and loader."""
+"""LiteNeTX CIFAR-10 model core."""
 
 import torch
 import torch.nn as nn
@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 
 class ResidualBlock(nn.Module):
-    """Residual block with optional downsampling."""
+    """Residual CIFAR-10 block."""
 
     def __init__(self, in_ch, out_ch, stride=1):
         super().__init__()
@@ -33,7 +33,7 @@ class ResidualBlock(nn.Module):
 
 
 class LiteNeTX_Base_CNN_C10(nn.Module):
-    """ResNet-style CNN for CIFAR-10 — 1.9M params, 3 stages (32->64->128->192)."""
+    """CIFAR-10 CNN model."""
 
     def __init__(self, num_classes=10):
         super().__init__()
@@ -88,7 +88,7 @@ _model = None
 
 
 def load_cifar_model():
-    """Load LiteNeTX-2 CIFAR-10 model from safetensors."""
+    """Load CIFAR-10 model."""
     global _model
     if _model is not None:
         return _model

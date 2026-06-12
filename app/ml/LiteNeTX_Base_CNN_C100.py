@@ -1,4 +1,4 @@
-"""LiteNeTX-3 CIFAR-100 model definition and loader."""
+"""LiteNeTX CIFAR-100 model core."""
 
 import torch
 import torch.nn as nn
@@ -9,7 +9,7 @@ from collections import OrderedDict
 
 
 def _drop_path(x, drop_prob, training):
-    """Stochastic depth — randomly drops residual branches during training."""
+    """Stochastic depth layer."""
     if drop_prob == 0. or not training:
         return x
     keep_prob = 1 - drop_prob
@@ -19,7 +19,7 @@ def _drop_path(x, drop_prob, training):
 
 
 class SEBlock(nn.Module):
-    """Squeeze-and-Excitation channel attention."""
+    """SE attention block."""
 
     def __init__(self, ch, reduction=16):
         super().__init__()
@@ -39,12 +39,7 @@ class SEBlock(nn.Module):
 
 
 class PreActBasicSE(nn.Module):
-    """Pre-activation basic residual block with SE attention and stochastic depth.
-    BN -> ReLU -> Conv3x3 -> BN -> ReLU -> Conv3x3 -> SE -> DropPath + Shortcut
-
-    Wider basic blocks provide better feature learning than narrow bottleneck blocks
-    for CIFAR-scale tasks, while being faster on CPU (fewer sequential ops).
-    """
+    """Pre-activation SE block."""
     def __init__(self, in_ch, out_ch, stride=1, drop_path_rate=0.0, se_reduction=16):
         super().__init__()
         self.bn1 = nn.BatchNorm2d(in_ch)
@@ -78,13 +73,7 @@ class PreActBasicSE(nn.Module):
 
 
 class LiteNeTX_Base_CNN_C100(nn.Module):
-    """
-    LiteNeTX CIFAR-100: ~18.9M params, PreAct Wide SE-ResNet.
-    Wider-than-deep design with SE attention and stochastic depth.
-    Channels: 64 -> 128 -> 256 -> 512
-    Blocks: 4 + 4 + 3 = 11 basic blocks (23 conv layers total)
-    Optimized for efficient CPU inference and high accuracy.
-    """
+    """CIFAR-100 Wide SE-ResNet."""
     def __init__(self, num_classes=100):
         super().__init__()
 
@@ -94,11 +83,11 @@ class LiteNeTX_Base_CNN_C100(nn.Module):
         total_blocks = sum(block_counts)
         dpr = [x.item() for x in torch.linspace(0, max_drop_path, total_blocks)]
 
-        # stem: 3 -> 64
+        # Stem layer
         self.conv1 = nn.Conv2d(3, 64, 3, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64)
 
-        # stages: wide basic blocks with SE attention
+        # Wide SE stages
         cur = 0
         self.stage1 = self._make_stage(64, channels[0], block_counts[0], stride=1,
                                         dprs=dpr[cur:cur+block_counts[0]])     # 32x32, 128ch
@@ -109,7 +98,7 @@ class LiteNeTX_Base_CNN_C100(nn.Module):
         self.stage3 = self._make_stage(channels[1], channels[2], block_counts[2], stride=2,
                                         dprs=dpr[cur:cur+block_counts[2]])     # 8x8, 512ch
 
-        # head
+        # Classification head
         self.final_bn = nn.BatchNorm2d(channels[2])
         self.pool = nn.AdaptiveAvgPool2d(1)
         self.dropout = nn.Dropout(0.25)
@@ -152,7 +141,7 @@ _model = None
 
 
 def load_cifar100_model():
-    """Load LiteNeTX-3 CIFAR-100 model from safetensors."""
+    """Load CIFAR-100 model."""
     global _model
     if _model is not None:
         return _model

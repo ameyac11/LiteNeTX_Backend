@@ -1,4 +1,4 @@
-"""LiteNeTX API — serves FashionMNIST, CIFAR-10, and CIFAR-100 models"""
+"""LiteNeTX prediction API."""
 
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -30,7 +30,7 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 
 @app.on_event("startup")
 async def startup_event():
-    """Load all three models on startup."""
+    """Warm models on startup."""
     load_fashion_model()
     load_cifar_model()
     load_cifar100_model()
@@ -38,7 +38,7 @@ async def startup_event():
 
 @app.get("/api/examples/list/{model_type}")
 async def list_examples(model_type: str) -> Dict:
-    """List available example images for a model."""
+    """List model examples."""
     if model_type not in VALID_MODEL_TYPES:
         raise HTTPException(status_code=400, detail=f"Invalid model type. Use one of: {VALID_MODEL_TYPES}")
 
@@ -62,7 +62,7 @@ async def options_example_image(model_type: str, filename: str):
 
 @app.get("/examples/{model_type}/{filename}")
 async def get_example_image(model_type: str, filename: str):
-    """Serve example images with CORS headers."""
+    """Serve example files."""
     if model_type not in VALID_MODEL_TYPES:
         raise HTTPException(status_code=400, detail="Invalid model type")
 
@@ -102,7 +102,7 @@ async def health() -> Dict:
 
 
 async def _handle_prediction(file: UploadFile, predict_fn):
-    """Shared prediction handler for all endpoints."""
+    """Shared prediction handler."""
     if not file:
         raise HTTPException(status_code=400, detail="No file provided")
 
@@ -123,19 +123,19 @@ async def _handle_prediction(file: UploadFile, predict_fn):
 
 @app.post("/predict/fashion")
 async def predict_fashion_endpoint(file: UploadFile = File(...)) -> Dict:
-    """Predict FashionMNIST class using LiteNeTX-1."""
+    """Predict FashionMNIST class."""
     return await _handle_prediction(file, predict_fashion)
 
 
 @app.post("/predict/cifar")
 async def predict_cifar_endpoint(file: UploadFile = File(...)) -> Dict:
-    """Predict CIFAR-10 class using LiteNeTX-2."""
+    """Predict CIFAR-10 class."""
     return await _handle_prediction(file, predict_cifar10)
 
 
 @app.post("/predict/cifar100")
 async def predict_cifar100_endpoint(file: UploadFile = File(...)) -> Dict:
-    """Predict CIFAR-100 class using LiteNeTX-3."""
+    """Predict CIFAR-100 class."""
     return await _handle_prediction(file, predict_cifar100)
 
 

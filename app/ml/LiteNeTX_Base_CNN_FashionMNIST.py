@@ -1,4 +1,4 @@
-"""LiteNeTX-1 FashionMNIST model definition and loader."""
+"""LiteNeTX FashionMNIST model core."""
 
 import torch
 import torch.nn as nn
@@ -9,12 +9,12 @@ from collections import OrderedDict
 
 
 class LiteNeTX_Base_CNN_FashionMNIST(nn.Module):
-    """Lightweight CNN for FashionMNIST — 426K params, strided-conv downsampling."""
+    """FashionMNIST CNN model."""
 
     def __init__(self, num_classes=10):
         super().__init__()
 
-        # Block 1: 28x28 -> 14x14
+        # First down block
         self.conv1 = nn.Conv2d(1, 32, 3, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(32)
         self.conv2 = nn.Conv2d(32, 64, 3, padding=1, bias=False)
@@ -23,7 +23,7 @@ class LiteNeTX_Base_CNN_FashionMNIST(nn.Module):
         self.bn_down1 = nn.BatchNorm2d(64)
         self.dropout2d_1 = nn.Dropout2d(0.1)
 
-        # Block 2: 14x14 -> 7x7
+        # Second down block
         self.conv3 = nn.Conv2d(64, 128, 3, padding=1, bias=False)
         self.bn3 = nn.BatchNorm2d(128)
         self.conv4 = nn.Conv2d(128, 128, 3, padding=1, bias=False)
@@ -32,7 +32,7 @@ class LiteNeTX_Base_CNN_FashionMNIST(nn.Module):
         self.bn_down2 = nn.BatchNorm2d(128)
         self.dropout2d_2 = nn.Dropout2d(0.15)
 
-        # Classifier
+        # Final classifier
         self.global_pool = nn.AdaptiveAvgPool2d(1)
         self.dropout = nn.Dropout(0.4)
         self.fc = nn.Linear(128, num_classes)
@@ -72,7 +72,7 @@ _model = None
 
 
 def load_fashion_model():
-    """Load LiteNeTX-1 FashionMNIST model from safetensors."""
+    """Load FashionMNIST model."""
     global _model
     if _model is not None:
         return _model

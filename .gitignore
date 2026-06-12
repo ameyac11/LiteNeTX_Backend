@@ -1,4 +1,4 @@
-# Python
+# Python cache files
 __pycache__/
 *.py[cod]
 *$py.class
@@ -23,7 +23,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Virtual Environment
+# Virtual environment folders
 .venv/
 venv/
 env/
@@ -31,23 +31,23 @@ ENV/
 env.bak/
 venv.bak/
 
-# IDEs
+# IDE settings files
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# Environment variables
+# Environment variable files
 .env
 .env.local
 .env.*.local
 
-# Logs
+# Log output files
 *.log
 logs/
 
-# Testing
+# Test artifact files
 .pytest_cache/
 .coverage
 htmlcov/
@@ -56,33 +56,30 @@ htmlcov/
 test_*.png
 test_*.jpg
 
-# Model files (keep models in git for deployment)
-# Uncomment if models are too large for git
-# models/*.pth
-# models/*.pt
+# Optional large models
 
-# Deployment
+# Deployment support files
 .render/
 render.yaml.backup
 
-# Uploaded files
+# Upload folder files
 uploads/
 temp/
 tmp/
 
-# OS
+# OS artifact files
 Thumbs.db
 .DS_Store
 
-# Git
+# Git metadata files
 .git/
 .gitattributes
 
-# Database
+# Database file rules
 *.db
 *.sqlite
 *.sqlite3
 
-# Cache
+# Cache file rules
 .cache/
 *.pyc

@@ -1,4 +1,4 @@
-"""Image preprocessing for all three models."""
+"""LiteNeTX preprocessing helpers."""
 
 import torch
 from torchvision import transforms
@@ -6,7 +6,7 @@ from PIL import Image
 
 
 def preprocess_fashion(image: Image.Image) -> torch.Tensor:
-    """Preprocess for LiteNeTX-1 FashionMNIST (1x28x28 grayscale)."""
+    """Prep FashionMNIST input."""
     transform = transforms.Compose([
         transforms.Resize(28),
         transforms.CenterCrop(28),
@@ -18,7 +18,7 @@ def preprocess_fashion(image: Image.Image) -> torch.Tensor:
 
 
 def preprocess_cifar10(image: Image.Image) -> torch.Tensor:
-    """Preprocess for LiteNeTX-2 CIFAR-10 (3x32x32 RGB)."""
+    """Prep CIFAR-10 input."""
     if image.mode != 'RGB':
         image = image.convert('RGB')
 
@@ -32,7 +32,7 @@ def preprocess_cifar10(image: Image.Image) -> torch.Tensor:
 
 
 def preprocess_cifar100(image: Image.Image) -> torch.Tensor:
-    """Preprocess for LiteNeTX-3 CIFAR-100 (3x32x32 RGB)."""
+    """Prep CIFAR-100 input."""
     if image.mode != 'RGB':
         image = image.convert('RGB')
 

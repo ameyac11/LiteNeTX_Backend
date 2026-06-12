@@ -1,4 +1,4 @@
-"""Prediction service for all three LiteNeTX models."""
+"""LiteNeTX prediction service core."""
 
 import torch
 import torch.nn.functional as F
@@ -13,7 +13,7 @@ from .labels import FASHION_LABELS, CIFAR10_LABELS, CIFAR100_LABELS
 
 
 def predict_fashion(image: Image.Image) -> Dict:
-    """Run inference on LiteNeTX-1 FashionMNIST."""
+    """Predict FashionMNIST class."""
     model = get_fashion_model()
     tensor = preprocess_fashion(image).to("cpu")
 
@@ -28,7 +28,7 @@ def predict_fashion(image: Image.Image) -> Dict:
 
 
 def predict_cifar10(image: Image.Image) -> Dict:
-    """Run inference on LiteNeTX-2 CIFAR-10."""
+    """Predict CIFAR-10 class."""
     model = get_cifar_model()
     tensor = preprocess_cifar10(image).to("cpu")
 
@@ -43,7 +43,7 @@ def predict_cifar10(image: Image.Image) -> Dict:
 
 
 def predict_cifar100(image: Image.Image) -> Dict:
-    """Run inference on LiteNeTX-3 CIFAR-100."""
+    """Predict CIFAR-100 class."""
     model = get_cifar100_model()
     tensor = preprocess_cifar100(image).to("cpu")
 
