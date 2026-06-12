@@ -40,9 +40,23 @@
 
 <br />
 
-The core API for **LiteNeTX** — custom CNN architectures developed entirely from scratch, with no pretrained models or transfer learning.  
-Serves lightweight inference for FashionMNIST, CIFAR-10, and CIFAR-100.  
-Works with the [Frontend](../frontend/README.md) for the full experience.
+The core API for **LiteNeTX** — a lightweight CNN family developed entirely from scratch, with no pretrained models or transfer learning. Serves real-time inference for FashionMNIST, CIFAR-10, and CIFAR-100 over a FastAPI REST interface.
+
+**Related repository:** [LiteNeTX Frontend](https://github.com/ameyac11/LiteNeTX_Frontend) — React UI for architecture exploration and the model playground.
+
+---
+
+## 📖 About
+
+LiteNeTX ships three PyTorch models trained from scratch on standard vision benchmarks. Weights are loaded via Safetensors at startup; inference is optimized for CPU deployment in production while models were trained on GPU.
+
+| Model | Dataset | Architecture |
+|:---|:---|:---|
+| LiteNeTX-FMNIST | FashionMNIST | Stacked conv blocks · BatchNorm · Dropout |
+| LiteNeTX-C10 | CIFAR-10 | Residual blocks · 3-stage downsampling |
+| LiteNeTX-C100 | CIFAR-100 | Wide SE-ResNet · DropPath regularization |
+
+**Training hardware:** NVIDIA Tesla T4 ×2 (30 GB VRAM)
 
 ---
 
@@ -84,7 +98,8 @@ uvicorn app.main:app --reload
 ```
 
 🌐 API → `http://localhost:8000`  
-📖 Docs → [`/docs`](http://localhost:8000/docs) · [`/redoc`](http://localhost:8000/redoc)
+📖 Docs → [`/docs`](http://localhost:8000/docs) · [`/redoc`](http://localhost:8000/redoc)  
+🎨 Frontend → [LiteNeTX_Frontend](https://github.com/ameyac11/LiteNeTX_Frontend)
 
 ---
 
