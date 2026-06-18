@@ -1,11 +1,11 @@
 # Web framework stack
 fastapi==0.128.0
 uvicorn==0.40.0
-python-multipart==0.0.21
+python-multipart==0.0.31
 
 # Torch CPU build
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.5.1+cpu
+torch==2.12.0+cpu
 torchvision==0.20.1+cpu
 
 # Model loading deps
@@ -15,7 +15,7 @@ safetensors==0.7.0
 packaging==24.0
 
 # Image processing tools
-pillow==12.0.0
+pillow==12.2.0
 
 # Configuration settings file
 pydantic-settings==2.12.0
