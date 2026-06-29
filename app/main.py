@@ -15,9 +15,22 @@ from app.ml.predictor import predict_fashion, predict_cifar10, predict_cifar100
 
 app = FastAPI(title="LiteNeTX API", version="2.0")
 
+import os
+
+default_origins = [
+    "https://litenetx.pages.dev",
+    "https://litenetx.in",
+    "https://www.litenetx.in",
+    "https://ww.litenetx.in",
+    "https://www.litnetx.in",
+    "https://litnetx.in"
+]
+env_origins = os.getenv("ALLOWED_ORIGINS")
+origins = [o.strip() for o in env_origins.split(",") if o.strip()] if env_origins else default_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://litenetx.in", "https://www.litenetx.in", "https://litenetx.vercel.app"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
