@@ -4,10 +4,10 @@
 
 **FastAPI · PyTorch · CPU-Optimized CNN Inference**
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white)](https://pytorch.org/)
-[![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)](https://numpy.org/)
+[![FastAPI](https://api.gitlytics.dev/api/badge/tech.svg?slug=fastapi&style=icon_label_value&label=Backend&label_color=%23555555&variant=plastic&value=FastAPI&value_color=%23009688)](https://fastapi.tiangolo.com/)
+[![Python](https://api.gitlytics.dev/api/badge/tech.svg?slug=python&style=icon_label_value&label=Language&label_color=%23555555&variant=plastic&value=Python&value_color=%233776AB)](https://www.python.org/)
+[![PyTorch](https://api.gitlytics.dev/api/badge/tech.svg?slug=pytorch&style=icon_label_value&label=AI%2FML&label_color=%23555555&variant=plastic&value=PyTorch&value_color=%23EE4C2C)](https://pytorch.org/)
+[![NumPy](https://api.gitlytics.dev/api/badge/tech.svg?slug=numpy&style=icon_label_value&label=Math&label_color=%23555555&variant=plastic&value=NumPy&value_color=%23013243)](https://numpy.org/)
 
 <br />
 
@@ -111,7 +111,7 @@ If you find this project useful or interesting, please consider giving it a ⭐ 
 
 ## 📜 License
 
-[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue?style=for-the-badge)](./LICENSE)
+[![License: AGPL-3.0](https://api.gitlytics.dev/api/badge/tech.svg?slug=license&style=icon_label_value&label=License&label_color=%23555555&variant=plastic&value=AGPL-3.0&value_color=%232F81F7)](./LICENSE)
 
 Licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.  
 Copyright © 2026 Ameya Sanjay Chopade · See [LICENSE](./LICENSE) for details.
